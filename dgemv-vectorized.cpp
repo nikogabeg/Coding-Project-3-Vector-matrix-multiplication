@@ -10,7 +10,6 @@ void my_dgemv(int n, double* A, double* x, double* y) {
    // insert your code here: implementation of vectorized vector-matrix multiply
 
    // compiler for vectorization from P&H Reading
-   #pragma omp parallel for
    for (int i = 0; i < n; i++) {
       double temp = y[i];  // Initialize with y[i] for y = A*x + y
         
