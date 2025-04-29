@@ -99,7 +99,7 @@ int main(int argc, char** argv)
         memcpy(Acopy, A, sizeof(double)*n*n);
         memcpy(Xcopy, X, sizeof(double)*n);
         memcpy(Ycopy, Y, sizeof(double)*n);
-        
+
         // insert start timer code here
         // Start timer
         auto start_time = std::chrono::high_resolution_clock::now();
