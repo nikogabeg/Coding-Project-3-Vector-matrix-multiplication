@@ -12,12 +12,12 @@ void my_dgemv(int n, double* A, double* x, double* y) {
    // compiler for vectorization from P&H Reading
    #pragma omp parallel for
    for (int i = 0; i < n; i++) {
-      double temp = 0.0;
+      double temp = y[i];  // Initialize with y[i] for y = A*x + y
         
       #pragma omp simd reduction(+:temp)
       for (int j = 0; j < n; j++) {
          temp += A[i * n + j] * x[j];
       }
-      y[i] = temp;
+      y[i] = temp; // this stores the final result
    }
 }
