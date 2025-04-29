@@ -89,6 +89,12 @@ int main(int argc, char** argv)
     /* For each test size */
     for (int n : test_sizes) 
     {
+        // Skip the first run (conditioning run)
+        if (skip_first) {
+          skip_first = false;
+          continue;
+        }
+        
         printf("Working on problem size N=%d \n", n);
 
         fill(A, n * n);
@@ -113,11 +119,7 @@ int main(int argc, char** argv)
         
         std::chrono::duration<double> elapsed = end_time - start_time;
 
-        // Skip the first run (conditioning run)
-        if (skip_first) {
-          skip_first = false;
-          continue;
-        }
+        
 
         // Calculate metrics
         double flops = 2.0 * n * n; // 2n² FLOPs
