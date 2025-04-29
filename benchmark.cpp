@@ -67,6 +67,8 @@ int main(int argc, char** argv)
     int n_problems = test_sizes.size();
 
     // preallocate memory buffers for all problems: assume the last number in test_sizes is the largest
+     // Theoretical peak bandwidth for Perlmutter CPU nodes (200 GB/s)
+     const double peak_bandwidth = 200.0 * 1024 * 1024 * 1024; // Convert to bytes/s
 
     // allocate memory for 2 NxN matrices and 4 Nx1 vectors
 
@@ -81,6 +83,9 @@ int main(int argc, char** argv)
     double* Ycopy = Y + max_size;
 
            // load up matrics with some random numbers
+
+    // Skip first iteration flag (since first 1024 is for conditioning)
+    bool skip_first = true;       
     /* For each test size */
     for (int n : test_sizes) 
     {
@@ -98,21 +103,42 @@ int main(int argc, char** argv)
         // insert start timer code here
         // Start timer
         auto start_time = std::chrono::high_resolution_clock::now();
-
-        // call the method to do the work
-        my_dgemv(n, A, X, Y); 
+        // now invoke the cblas method to compute the matrix-vector multiplye
+        reference_dgemv(n, Acopy, Xcopy, Ycopy);
+        
 
         // insert end timer code here, and print out the elapsed time for this problem size
         // End timer and calculate elapsed time
         auto end_time = std::chrono::high_resolution_clock::now();
+        
         std::chrono::duration<double> elapsed = end_time - start_time;
 
-        // Printed elapsed time
-        std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
+        // Skip the first run (conditioning run)
+        if (skip_first) {
+          skip_first = false;
+          continue;
+        }
 
-        // now invoke the cblas method to compute the matrix-vector multiplye
-        reference_dgemv(n, Acopy, Xcopy, Ycopy);
+        // Calculate metrics
+        double flops = 2.0 * n * n; // 2n² FLOPs
+        double mflops = (flops / 1e6) / elapsed.count();
 
+        // Memory accesses: read A (n²), read X (n), read/write Y (n)
+        double bytes_accessed = (n * n + 2 * n) * sizeof(double);
+        double bandwidth_used = bytes_accessed / elapsed.count();
+        double bandwidth_utilization = (bandwidth_used / peak_bandwidth) * 100.0;
+
+        
+        
+        // Print results
+        std::cout << "  Time: " << elapsed.count() << " seconds" << std::endl;
+        std::cout << "  MFLOP/s: " << mflops << std::endl;
+        std::cout << "  Memory bandwidth used: " << bandwidth_used / (1024*1024*1024) << " GB/s" << std::endl;
+        std::cout << "  % of peak bandwidth: " << bandwidth_utilization << "%" << std::endl;
+
+        // call the method to do the work
+        my_dgemv(n, A, X, Y); 
+        
         // compare your result with that computed by BLAS
         if (check_accuracy(Ycopy, Y, n) == false)
            printf(" Error: your answer is not the same as that computed by BLAS. \n");
