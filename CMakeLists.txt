@@ -18,7 +18,7 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 # alternate for AMD 7763: produces significant speedup over basic   set(VFLAGS -O2 -DNDEBUG -Wall -march=znver1 -mtune=znver1 -mavx2 -ftree-vectorize  -ffast-math -fopt-info-vec-all=report.txt)
 # conservative, portable   set(VFLAGS  -O3  -fopt-info-vec-all=report.txt)
 #   set(VFLAGS  -O3 -mprefer-vector-width=512 -mavx512f -mavx512cd -fopt-info-vec-all=report.txt)
-#   set(VFLAGS  -O2 -march=knl -mprefer-vector-width=512 -mavx512f -mavx512cd -fopt-info-vec-all=report.txt)
+   set(VFLAGS  -O2 -march=knl -mprefer-vector-width=512 -mavx512f -mavx512cd -fopt-info-vec-all=report.txt)
 #   message(STATUS "vectorization flags for gcc compiler are" ${VFLAGS})
 endif ()
 
