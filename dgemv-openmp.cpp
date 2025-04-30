@@ -20,7 +20,7 @@ void my_dgemv(int n, double* A, double* x, double* y) {
    // use #pragma omp parallel for to parallelize row computations from lecture page 51
    #pragma omp parallel for
    for (int i = 0; i < n; i++) {
-      double temp = y[i]; // Initialize with y[i]
+      double temp = 0.0; // Initialize with y[i]
 
       // Vectorized inner loop
       #pragma omp simd
