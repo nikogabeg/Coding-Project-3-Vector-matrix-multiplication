@@ -1,3 +1,6 @@
+// Niko Galedo
+// CSC 656-01
+//
 #include <cblas.h>
 
 const char* dgemv_desc = "Reference dgemv.";

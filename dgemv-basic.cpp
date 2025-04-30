@@ -1,3 +1,7 @@
+// Niko Galedo
+// CSC 656-01
+//
+
 const char* dgemv_desc = "Basic implementation of matrix-vector multiply.";
 
 /*

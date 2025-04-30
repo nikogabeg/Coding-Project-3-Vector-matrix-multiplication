@@ -1,3 +1,6 @@
+// Niko Galedo
+// CSC 656-01
+//
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
